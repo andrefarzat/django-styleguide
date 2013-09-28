@@ -1,0 +1,3 @@
+include *.txt
+include README.md
+recusive-include docs *.txt
