@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Styleguide</title>
+</head>
+<body>
+
+    <h1>Opa Styleguide</h1>
+
+    {{ styleguide }}
+
+    {% for module, components in styleguide.items %}
+        <h2>Module: {{ module }}</h2>
+
+        {% for component in components %}
+            <section>
+                {% for key, value in component.items %}
+                    <h3>{{ key }}: {{ value }}</h3>
+
+                    {% include component.template %}
+                {% endfor %}
+            </section>
+        {% endfor %}
+
+    {% endfor %}
+
+</body>
+
+</html>
