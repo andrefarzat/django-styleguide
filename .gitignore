@@ -1,8 +1,10 @@
 *.log
 *.pot
 *.pyc
+django_styleguide.egg-info
 local_settings.py
 .sass-cache
 build
 dist
 docs/_build
+MANIFEST
