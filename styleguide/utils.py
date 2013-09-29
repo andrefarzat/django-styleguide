@@ -1,9 +1,12 @@
 import os
+import re
+from collections import OrderedDict
 from django.template.loaders.app_directories import Loader, app_template_dirs
 
 # Base on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
 
 STYLEGUIDE_DIR_NAME = 'styleguide'
+FILE_NAME_RE = re.compile('^\d{2}\-')
 
 styleguide_template_dirs = []
 
@@ -19,12 +22,46 @@ styleguide_template_dirs = tuple(styleguide_template_dirs)
 
 class StyleguideLoader(Loader):
 
-
     def get_styleguide_components(self):
-        ret = {}
+        """
+        Search for all templates files in `STYLEGUIDE_DIR_NAME` app_directories
+        in all installed apps in the django project
+
+        returns a dict with the folder name as the key and a list with all template
+        files in that folder.
+
+        for example, givin the following folder structure:
+
+        /templates
+          /styleguide
+            /layout
+              /header.html
+              /footer.html
+            /components
+              /bar.html
+              /list.html
+
+        Would result in the following dict:
+
+        {
+            'layout' : [
+                { 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html' },
+                { 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html' },
+            ],
+            'components' : [
+                'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html' },
+                'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html' },
+            ]
+        }
+        """
+
+        ret = OrderedDict()
 
         for styleguide_template_dir in styleguide_template_dirs:
             for root, dirs, files in os.walk(styleguide_template_dir):
+                # To make it walk alphabetically
+                dirs.sort()
+
                 for dir_name in dirs:
                     ret[dir_name] = self._get_components_from_folder(root, dir_name)
 
@@ -39,7 +76,14 @@ class StyleguideLoader(Loader):
 
         components = []
         for root, dirs, files in os.walk(os.path.join(root, dir_name)):
+            # To make it walk alphabetically
+            files.sort()
+
             for file_name in files:
+                if not file_name.endswith('.html'):
+                    # only template files
+                    continue
+
                 component = {
                     'name': self._format_file_name(file_name),
                     'file_name': file_name,
@@ -55,5 +99,8 @@ class StyleguideLoader(Loader):
         """
         returns the file_name formatted to display
         """
+
+        # if the file_name startswith two digits, remove them
+        file_name = FILE_NAME_RE.split(file_name)[-1]
 
         return ".".join(file_name.split('.html')[:-1])
