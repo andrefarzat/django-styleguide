@@ -3,8 +3,6 @@ import re
 from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
 
-# Base on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
-
 STYLEGUIDE_DIR_NAME = 'styleguide'
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
@@ -18,6 +16,7 @@ class StyleguideLoader(object):
         -> tuple(string, string, ..)
         """
 
+        # Base on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
         styleguide_template_dirs = []
 
         try:
