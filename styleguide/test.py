@@ -15,6 +15,19 @@ DOC_STRING = """@doc
 
 """.strip()
 
+DOC_STRING_2 = """@doc
+
+@name something different
+@oneline does this work ?
+@twolines if I put this in
+twolines, would this work ?
+@threelines
+  Now I am getting too deep ?
+  I am going to write three lines !
+  OMG! I did wrote three lines !!!
+
+""".strip()
+
 
 class StyleguideLoaderTest(unittest.TestCase):
 
@@ -68,4 +81,14 @@ class StyleguideLoaderTest(unittest.TestCase):
         }
 
         result = self.loader.parse_doc(DOC_STRING)
+        self.assertEqual(result, expected_result)
+
+        expected_result = {
+            "name": "something different",
+            "oneline": "does this work ?",
+            "twolines": "if I put this in\ntwolines, would this work ?",
+            "threelines": "Now I am getting too deep ?\nI am going to write three lines !\nOMG! I did wrote three lines !!!"
+        }
+
+        result = self.loader.parse_doc(DOC_STRING_2)
         self.assertEqual(result, expected_result)

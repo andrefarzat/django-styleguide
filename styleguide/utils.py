@@ -166,9 +166,12 @@ class StyleguideLoader(object):
             if line and line[0] == '@':
                 words = line.split(' ')
                 current_tag = words[0][1:]
-                ret[current_tag] = " ".join(words[1:])
+                ret[current_tag] = " ".join(words[1:]).strip()
 
             elif current_tag in ret:
-                ret[current_tag] += "\n %s" % line
+                if ret[current_tag] != '':
+                    ret[current_tag] += "\n"
+
+                ret[current_tag] += "%s" % line
 
         return ret
