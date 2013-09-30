@@ -2,6 +2,8 @@ import os
 import re
 from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
+from django.template import Lexer, Parser
+from django.template.defaulttags import CommentNode
 
 STYLEGUIDE_DIR_NAME = 'styleguide'
 FILE_NAME_RE = re.compile('^\d{2}\-')
@@ -85,6 +87,8 @@ class StyleguideLoader(object):
         """
         :root: The whole path to the folder
         :dir_name: The folder's name
+
+        -> dict
         """
 
         components = []
@@ -116,3 +120,55 @@ class StyleguideLoader(object):
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
         return file_name.split('.html')[0]
+
+
+    def extract_doc_from_file(self, file_path):
+        """ -> string """
+
+        file_contents = open(file_path).read()
+        lexer = Lexer(file_contents, None)
+        tokens = lexer.tokenize()
+        parser = Parser(lexer.tokenize())
+
+        index = 0
+        result = ""
+
+        for node in parser.parse():
+            if isinstance(node, CommentNode):
+                result = tokens[index+1].contents.strip()
+                break
+
+            index += 1
+
+        return result
+
+
+    def parse_doc(self, doc):
+        """
+        :doc: string
+        parses the given string and returns a dict with all documentation tags
+        -> dict
+        """
+
+        lines = doc.split("\n")
+        current_tag = None
+        ret = {}
+
+        for line in lines:
+            line = line.strip()
+
+            if line.startswith('@doc'):
+                continue
+
+            if not line:
+                continue
+
+            if line and line[0] == '@':
+                words = line.split(' ')
+                current_tag = words[0][1:]
+                ret[current_tag] = " ".join(words[1:])
+
+            elif current_tag in ret:
+                ret[current_tag] += "\n %s" % line
+
+        return ret
