@@ -1,26 +1,39 @@
 import os
 import re
 from collections import OrderedDict
-from django.template.loaders.app_directories import Loader, app_template_dirs
+from django.core.exceptions import ImproperlyConfigured
 
 # Base on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
 
 STYLEGUIDE_DIR_NAME = 'styleguide'
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
-styleguide_template_dirs = []
+
+class StyleguideLoader(object):
 
 
-for app_tempalte_dir in app_template_dirs:
-    template_dir = os.path.join(app_tempalte_dir, STYLEGUIDE_DIR_NAME)
+    def _get_template_dirs(self):
+        """
+        Returns all template folder from all installed apps
+        -> tuple(string, string, ..)
+        """
 
-    if os.path.isdir(template_dir):
-        styleguide_template_dirs.append(template_dir)
+        styleguide_template_dirs = []
 
+        try:
+            from django.template.loaders.app_directories import app_template_dirs
+        except ImproperlyConfigured:
+            # Running outside django's environmement
+            app_template_dirs = []
 
-styleguide_template_dirs = tuple(styleguide_template_dirs)
+        for app_template_dir in app_template_dirs:
+            template_dir = os.path.join(app_template_dir, STYLEGUIDE_DIR_NAME)
 
-class StyleguideLoader(Loader):
+            if os.path.isdir(template_dir):
+                styleguide_template_dirs.append(template_dir)
+
+        return tuple(styleguide_template_dirs)
+
 
     def get_styleguide_components(self):
         """
@@ -56,6 +69,7 @@ class StyleguideLoader(Loader):
         """
 
         ret = OrderedDict()
+        styleguide_template_dirs = self._get_template_dirs()
 
         for styleguide_template_dir in styleguide_template_dirs:
             for root, dirs, files in os.walk(styleguide_template_dir):
@@ -102,5 +116,4 @@ class StyleguideLoader(Loader):
 
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
-
-        return ".".join(file_name.split('.html')[:-1])
+        return file_name.split('.html')[0]
