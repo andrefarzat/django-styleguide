@@ -104,7 +104,8 @@ class StyleguideLoader(object):
                 component = {
                     'name': self._format_file_name(file_name),
                     'file_name': file_name,
-                    'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name)
+                    'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name),
+                    'doc': self.get_doc_from_file(os.path.join(root, file_name))
                 }
 
                 components.append(component)
@@ -120,6 +121,16 @@ class StyleguideLoader(object):
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
         return file_name.split('.html')[0]
+
+
+    def get_doc_from_file(self, file_path):
+        """
+        :file_path: string
+        -> dict
+        """
+
+        doc_string = self.extract_doc_from_file(file_path)
+        return self.parse_doc(doc_string)
 
 
     def extract_doc_from_file(self, file_path):

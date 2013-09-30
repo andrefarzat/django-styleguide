@@ -55,8 +55,8 @@ class StyleguideLoaderTest(unittest.TestCase):
 
     def test__get_components_from_folder(self):
         expected_result = [
-            { 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html'},
-            { 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html'}
+            { 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html', 'doc': {} },
+            { 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html', 'doc': {} }
         ]
 
         path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
