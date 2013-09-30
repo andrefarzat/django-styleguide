@@ -40,8 +40,6 @@ class StyleguideLoaderTest(unittest.TestCase):
         path_to_test = os.path.join(PROJECT_ROOT, 'styleguide_mock', 'templates', STYLEGUIDE_DIR_NAME)
         result = self.loader._get_components_from_folder(path_to_test, 'layout')
 
-        print path_to_test
-
         self.assertEqual(result, expected_result)
 
 
