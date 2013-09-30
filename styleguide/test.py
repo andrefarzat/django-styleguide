@@ -1,13 +1,10 @@
 import unittest
-from .utils import StyleguideLoader
+import os
+from .utils import StyleguideLoader, STYLEGUIDE_DIR_NAME
 
 
-class SimpleTest(unittest.TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.assertEqual(1 + 1, 2)
+CURRENT_PATH = os.path.dirname(__file__)
+PROJECT_ROOT = os.path.join(CURRENT_PATH, '..')
 
 
 class StyleguideLoaderTest(unittest.TestCase):
@@ -32,3 +29,19 @@ class StyleguideLoaderTest(unittest.TestCase):
         for file_name, expected_result in file_name_list_to_be_tested:
             formatted_file_name = self.loader._format_file_name(file_name)
             self.assertEqual(formatted_file_name, expected_result)
+
+
+    def test__get_components_from_folder(self):
+        expected_result = [
+            { 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html'},
+            { 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html'}
+        ]
+
+        path_to_test = os.path.join(PROJECT_ROOT, 'styleguide_mock', 'templates', STYLEGUIDE_DIR_NAME)
+        result = self.loader._get_components_from_folder(path_to_test, 'layout')
+
+        print path_to_test
+
+        self.assertEqual(result, expected_result)
+
+
