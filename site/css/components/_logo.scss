@@ -1,0 +1,13 @@
+.logo {
+    color: $color-darkgreen;
+    border-right: solid 5px $color-darkgreen;
+    display: inline-block;
+    padding-right: 10px;
+
+    small {
+        color: inherit;
+        display: block;
+        margin-top: 10px;
+        font-size: 25.5px;
+    }
+}

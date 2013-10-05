@@ -1,0 +1,33 @@
+// Default spacer
+// ==============
+.spacer {
+    clear: both;
+    display: block;
+    height: $spacer-height;
+    line-height: $spacer-height;
+}
+
+.spacer.spacer--big {
+    height: $spacer-height * 2;
+    line-height: $spacer-height * 2;
+}
+
+.spacer.spacer--huge {
+    height: $spacer-height * 4;
+    line-height: $spacer-height * 4;
+}
+
+// Vertical separator
+// ==================
+.vspacer {
+    display: inline-block;
+    width: $margin;
+}
+
+.vspacer.vspacer--big {
+    width: $margin * 2;
+}
+
+.vspacer.vspacer--huge {
+    width: $margin * 4;
+}

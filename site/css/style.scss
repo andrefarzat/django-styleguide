@@ -1,0 +1,31 @@
+@import "compass";
+
+@import "base/variables.scss";
+
+@import "lib/bootstrap.scss";
+@import "lib/bootstrap-responsive.scss";
+@import "lib/syntax.scss";
+
+@import "components/icon.scss";
+@import "components/logo.scss";
+@import "components/spacer.scss";
+
+
+.githublink {
+    @include box-sizing( border-box );
+    display: inline-block;
+    width: 160px;
+    color: $color-lightgray;
+    text-decoration: none;
+    opacity: 0.6;
+    margin-top: 14px;
+    text-align: center;
+    font-size: 70px;
+    float: right;
+
+    &:hover {
+        opacity: 1;
+        color: $color-lightgray;
+        text-decoration: none;
+    }
+}

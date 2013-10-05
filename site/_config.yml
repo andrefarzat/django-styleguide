@@ -1,0 +1,2 @@
+pygments: true
+exclude: ['README.md', 'css/style.scss']
