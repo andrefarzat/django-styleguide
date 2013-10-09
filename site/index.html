@@ -27,7 +27,7 @@
                         <small>STYLE GUIDE</small>
                     </h1>
 
-                    <a href="//github.com/andrefarzat/django-styleguide" class="githublink" title="See in Github"><i class="icon-github-1"></i></a>
+                    <a href="//github.com/andrefarzat/django-styleguide" class="githublink" title="See in Github" rel="external"><i class="icon-github-1"></i></a>
 
                 </div>
             </div>
@@ -36,21 +36,6 @@
         <div class="spacer"></div>
 
         <main id="main" class="container">
-            <h3>Todo list:</h3>
-
-            <ul>
-                <li><del>Introduction</del></li>
-                <li><del>Features</del></li>
-                <li><del>Explanation</del></li>
-                <li><del>How to install</del></li>
-                <li>How to configure</li>
-                <li>Creating your own index.html</li>
-                <li>Understanding the folder structure (modules and files)</li>
-                <li>How to sort the result</li>
-                <li>Credits</li>
-            </ul>
-
-
             <h2>Introduction</h2>
 
             <p>
@@ -83,8 +68,9 @@
                 <a href="//smacss.com/" rel="external">SMACSS</a> or <a href="//oocss.org/" rel="external">OOCSS</a> you can have a hard time
                 creating the CSS and maintaining it as the project grows.<br />
                 A good pattern is creating a styleguide as a way to document your html components and css code.<br />
-                Big projects such as <a href="getbootstrap.com/" rel="external">bootstrap</a>, <a href="//foundation.zurb.com/docs/">foundation</a> or <a href="//purecss.io/">purecss</a> has their own styleguide as their frontend's documentation.
-                This django's module helps you to dynamically generate a styleguide for your django project in an easy way.
+                Big projects such as <a href="getbootstrap.com/" rel="external">bootstrap</a>, <a href="//foundation.zurb.com/docs/">foundation</a> or <a href="//purecss.io/" rel="external">purecss</a> has their own styleguide as their frontend's documentation.
+                This django's module helps you to dynamically generate a styleguide for your django project in an easy way.<br />
+                You can create a template file for each html component you have and sort them using folder as modules.
             </p>
 
 
@@ -115,15 +101,85 @@ urlpatterns = patterns('',
             <p>Once you start the server, you can navegate to /styleguide/ and see the initial page.</p>
 
             
-            <h2>How to configure</h2>
+            <h2>Getting started</h2>
+            
+            <p>
+                Create a <code>styleguide</code> folder in the <code>templates</code> folder in your django project. <br />
+                Then, create a folder named <code>basic</code> and add a file name <code>box.html</code>.<br />
+                Navigate to /styleguide/ and you will see that the <code>box</code> component is shown in the <code>basic</code> module.<br />
+                That's how you can create modules and components to organize your styleguide.
+            </p>
+
+            <h2>Creating your own index</h2>
+
+            <p>
+                Django-styleguide uses the django's template engine to compose the final html.<br />
+                To replace it you can create the <code>index.html</code> file in <code>styleguide</code>
+                template folder and it will be used instead of the default one (<a href="//docs.djangoproject.com/en/1.5/ref/templates/api/#django.template.loaders.app_directories.Loader" rel="external">respecting the Template Loader order</a>).
+                In the context, there is a variable called <code>styleguide</code> that has all modules and components.<br />
+                Here I show you a minimal example for an index.html:
+            </p>
+
+{% highlight django %}{% raw %}
+{% for module, components in styleguide.items %}
+    <h2>Module: {{ module }}</h2>
+
+    {% for component in components %}
+        <section>
+            <h3><a href="{{component.link}}">{{ component.name }}</a></h3>
+
+            {% include component.template %}
+        </section>
+    {% endfor %}
+
+{% endfor %}
+{% endraw %}{% endhighlight %}
+
+            <p>
+                You can check the <a href="//github.com/andrefarzat/django-styleguide/blob/master/styleguide/templates/styleguide/index.html" rel="external">default index.html file</a> to see a more complete example.
+            </p>
+    
+            <h2>Understanding the folder structure (modules and files)</h2>
+
+            <p>
+                Having folder and files as modules and components follow the <a href="//docs.python.org/2/tutorial/modules.html">python pattern for modules</a>.<br />
+                You can create any number of folder and subfolder as you wish to organize your components.<br />
+                This helps not only separating well the components, but also it is possible to create the menu items regarding the modules and also create permalink direct to a module or component.<br />
+                As an example, if you navigate to the url /styleguide/basic/box you will see only <code>box</code> component from the <code>basic</code> module.
+            </p>
+
+            <h2>Sorting the result</h2>
+            <p>
+                The order which the modules and components are shown is very important.<br />
+                They are always sorted alphabetically, however, you can sort them using a number prefix in the folder or file.<br />
+                Let's say you have three template files inside the <code>basic</code> folder: <code>box</code>, <code>table sorter</code> and <code>list</code>.<br />
+                If you need to define an order, you prefix them using two number and a dash such as <code>01-list.html</code>.
+                The name will be formatted removing this prefix from all files and folder. This way you can deternime any order you want.<br />
+                In the same way, undercores and dashes will be conveted to white spaces.
+            </p>
+{% highlight sh %}
+01-list.html #  will be shown as 'list'
+02-table_sorter.html #  will be shown as 'table sorter'
+box.html #  will be shown as 'box'
+{% endhighlight %}
+
+            <h2>Configure</h2>
+            <p>There are a few configuration variables that you can overwritten.</p>
+{% highlight python %}
+# The name of the styleguide directory in templates folder
+STYLEGUIDE_DIR_NAME = 'styleguide'
+
+
+{% endhighlight %}
+            <!-- h2>Credits</h2 -->
 
         </main>
 
 
         <footer id="footer">
-            
+            <p>&nbsp;</p>    
         </footer>
-
+        
     </div>
 
     

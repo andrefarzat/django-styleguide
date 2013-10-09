@@ -8,5 +8,6 @@ build
 dist
 docs/_build
 MANIFEST
+_site
 site/_site
 site/css/style.css
