@@ -39,16 +39,84 @@
             <h3>Todo list:</h3>
 
             <ul>
-                <li>Introduction</li>
-                <li>Features</li>
-                <li>Explanation</li>
-                <li>How to install</li>
+                <li><del>Introduction</del></li>
+                <li><del>Features</del></li>
+                <li><del>Explanation</del></li>
+                <li><del>How to install</del></li>
                 <li>How to configure</li>
                 <li>Creating your own index.html</li>
                 <li>Understanding the folder structure (modules and files)</li>
                 <li>How to sort the result</li>
                 <li>Credits</li>
             </ul>
+
+
+            <h2>Introduction</h2>
+
+            <p>
+                Django-styleguide helps you to create and maintain a living styleguide in your django project.<br />
+                It is designed to be as simple as adding a template file to your project.
+            </p>
+
+            <h2>Features</h2>
+
+            <p>
+                <dl>
+                    <dt>Simple configuration</dt>
+                    <dd>Install it, add the <code>styleguide</code> template folder, it works</dd>
+                    
+                    <dt>Dynamic generation</dt>
+                    <dd>Do not need to execute a django command, while <code>DEBUG = True</code> it generates each time.</dd>
+
+                    <dt>Your code. Your way</dt>
+                    <dd>100% configurable. You add the css and js necessary. Checkout the configuration section.</dd>
+                </dl>
+                
+            </p>
+
+
+            <h2>Explanation</h2>
+
+            <p>
+                Create and maintain a living styleguide is a hard task.
+                If you follow good patterns such as <a href="//bem.info/" rel="external">BEM</a>,
+                <a href="//smacss.com/" rel="external">SMACSS</a> or <a href="//oocss.org/" rel="external">OOCSS</a> you can have a hard time
+                creating the CSS and maintaining it as the project grows.<br />
+                A good pattern is creating a styleguide as a way to document your html components and css code.<br />
+                Big projects such as <a href="getbootstrap.com/" rel="external">bootstrap</a>, <a href="//foundation.zurb.com/docs/">foundation</a> or <a href="//purecss.io/">purecss</a> has their own styleguide as their frontend's documentation.
+                This django's module helps you to dynamically generate a styleguide for your django project in an easy way.
+            </p>
+
+
+            <h2>How to install</h2>
+
+            <p>To install it, you can use pip as follow:</p>
+{% highlight sh %}pip install django-styleguide{% endhighlight %}
+            
+            <p>Or cloning the github's project direct in your project:</p>
+{% highlight sh %}git clone git@github.com:andrefarzat/django-styleguide.git styleguide{% endhighlight %}
+
+            <p>Add it in the <code>INSTALLED_APPS</code> list</p>
+{% highlight python %}
+INSTALLED_APPS = (
+    ...
+    'styleguide',
+)
+{% endhighlight %}
+
+            <p>Then add the <code>styleguide</code> module in the urls list:</p>
+{% highlight python %}
+urlpatterns = patterns('',
+    ...
+    url(r'^styleguide/', include('styleguide.urls')),
+)
+{% endhighlight %}
+
+            <p>Once you start the server, you can navegate to /styleguide/ and see the initial page.</p>
+
+            
+            <h2>How to configure</h2>
+
         </main>
 
 
