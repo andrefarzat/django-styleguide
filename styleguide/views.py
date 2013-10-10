@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# 
 from django.shortcuts import render
 from styleguide.utils import StyleguideLoader
 

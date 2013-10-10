@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 from collections import OrderedDict
@@ -101,11 +103,13 @@ class StyleguideLoader(object):
                     # only template files
                     continue
 
+                doc = self.get_doc_from_file(os.path.join(root, file_name))
+
                 component = {
-                    'name': self._format_file_name(file_name),
+                    'name': self._format_file_name(doc.get('name', file_name)),
                     'file_name': file_name,
                     'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name),
-                    'doc': self.get_doc_from_file(os.path.join(root, file_name))
+                    'doc': doc
                 }
 
                 components.append(component)

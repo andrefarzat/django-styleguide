@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 import os
 from .utils import StyleguideLoader, STYLEGUIDE_DIR_NAME
