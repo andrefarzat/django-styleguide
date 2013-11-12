@@ -46,7 +46,12 @@ class StyleguideLoaderTest(unittest.TestCase):
             ("0x-name.html", "0x-name"),
             ("89-name.html", "name"),
             ("name.nothing.html", "name.nothing"),
-            ("nothing.todo.no-where_to_go", "nothing.todo.no-where_to_go")
+            ("nothing.todo.no-where-to-go", "nothing.todo.no-where-to-go"),
+
+            # replacing underscore to whitespace
+            ("name_separated", "name separated"),
+            ("1_2_3_4_5_6", "1 2 3 4 5 6"),
+            ('____A', "    A"),
         ]
 
 

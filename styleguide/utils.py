@@ -124,7 +124,7 @@ class StyleguideLoader(object):
 
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
-        return file_name.split('.html')[0]
+        return file_name.split('.html')[0].replace('_', ' ')
 
 
     def get_doc_from_file(self, file_path):
