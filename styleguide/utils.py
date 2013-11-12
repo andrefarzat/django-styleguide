@@ -4,10 +4,14 @@ import os
 import re
 from collections import OrderedDict
 from django.core.exceptions import ImproperlyConfigured
+from django.core.urlresolvers import reverse
 from django.template import Lexer, Parser
 from django.template.defaulttags import CommentNode
 
 STYLEGUIDE_DIR_NAME = 'styleguide'
+
+STYLEGUIDE_URL = '/' # reverse("styleguide.index")
+
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
 
@@ -61,12 +65,12 @@ class StyleguideLoader(object):
 
         {
             'layout' : [
-                { 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html' },
-                { 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html' },
+                { 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
+                { 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
             ],
             'components' : [
-                'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html' },
-                'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html' },
+                'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
+                'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
             ]
         }
         """
@@ -109,7 +113,8 @@ class StyleguideLoader(object):
                     'name': self._format_file_name(doc.get('name', file_name)),
                     'file_name': file_name,
                     'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name),
-                    'doc': doc
+                    'doc': doc,
+                    'link': reverse("styleguide.component", args=(dir_name, file_name.replace('.html', ''),))
                 }
 
                 components.append(component)

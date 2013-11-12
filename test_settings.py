@@ -3,6 +3,8 @@
 SECRET_KEY = 'psst'
 SITE_ID = 1
 
+ROOT_URLCONF = 'styleguide.urls'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

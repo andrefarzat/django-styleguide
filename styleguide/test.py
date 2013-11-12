@@ -2,12 +2,16 @@
 
 import unittest
 import os
+
+from django.core.urlresolvers import reverse
+
 from .utils import StyleguideLoader, STYLEGUIDE_DIR_NAME
 
 
 CURRENT_PATH = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.join(CURRENT_PATH, '..')
 MOCK_PROJECT_PATH = os.path.join(PROJECT_ROOT, 'styleguide_mock', 'templates')
+STYLEGUIDE_URL = reverse("styleguide.index")
 
 DOC_STRING = """@doc
 
@@ -62,8 +66,8 @@ class StyleguideLoaderTest(unittest.TestCase):
 
     def test__get_components_from_folder(self):
         expected_result = [
-            { 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html', 'doc': {} },
-            { 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html', 'doc': {} }
+            { 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html', 'doc': {}, 'link': STYLEGUIDE_URL+'layout/footer' },
+            { 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html', 'doc': {}, 'link': STYLEGUIDE_URL+'layout/header' }
         ]
 
         path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
