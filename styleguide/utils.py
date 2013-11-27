@@ -3,14 +3,15 @@
 import os
 import re
 from collections import OrderedDict
+
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
 from django.template import Lexer, Parser
 from django.template.defaulttags import CommentNode
 
-STYLEGUIDE_DIR_NAME = 'styleguide'
 
-STYLEGUIDE_URL = reverse("styleguide.index")
+STYLEGUIDE_DIR_NAME = getattr(settings, 'STYLEGUIDE_DIR_NAME', 'styleguide')
 
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
@@ -24,7 +25,7 @@ class StyleguideLoader(object):
         -> tuple(string, string, ..)
         """
 
-        # Base on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
+        # Based on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
         styleguide_template_dirs = []
 
         try:
