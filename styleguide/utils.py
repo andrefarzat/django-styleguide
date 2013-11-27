@@ -10,7 +10,7 @@ from django.template.defaulttags import CommentNode
 
 STYLEGUIDE_DIR_NAME = 'styleguide'
 
-STYLEGUIDE_URL = '/' # reverse("styleguide.index")
+STYLEGUIDE_URL = reverse("styleguide.index")
 
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
