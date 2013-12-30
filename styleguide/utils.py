@@ -66,12 +66,12 @@ class StyleguideLoader(object):
 
         {
             'layout' : [
-                { 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
-                { 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
+                { 'id': 'header', 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
+                { 'id': 'footer', 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
             ],
             'components' : [
-                'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
-                'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
+                { 'id': 'bar', 'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
+                { 'id': 'list', 'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
             ]
         }
         """
@@ -109,13 +109,15 @@ class StyleguideLoader(object):
                     continue
 
                 doc = self.get_doc_from_file(os.path.join(root, file_name))
+                component_id = file_name.split('.html')[0]
 
                 component = {
+                    'id': component_id,
                     'name': self._format_file_name(doc.get('name', file_name)),
                     'file_name': file_name,
                     'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name),
                     'doc': doc,
-                    'link': reverse("styleguide.component", args=(dir_name, file_name.replace('.html', ''),))
+                    'link': reverse("styleguide.component", args=(dir_name, component_id,))
                 }
 
                 components.append(component)
