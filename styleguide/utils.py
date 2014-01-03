@@ -12,6 +12,7 @@ from django.template.defaulttags import CommentNode
 
 
 STYLEGUIDE_DIR_NAME = getattr(settings, 'STYLEGUIDE_DIR_NAME', 'styleguide')
+STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS', ('includes', ))
 
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
@@ -85,6 +86,8 @@ class StyleguideLoader(object):
                 dirs.sort()
 
                 for dir_name in dirs:
+                    if dir_name in STYLEGUIDE_IGNORE_FOLDERS:
+                        continue
                     ret[dir_name] = self._get_components_from_folder(root, dir_name)
 
         return ret
