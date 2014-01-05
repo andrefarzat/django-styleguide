@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='django-styleguide',
-    version='0.1.6',
+    version='0.1.8',
     author=u'André Farzat',
     author_email='andrefarzat@gmail.com',
     packages=find_packages(),
@@ -12,7 +12,7 @@ setup(
     license='LICENSE',
     description='Styleguide for django projects',
     long_description=open('README.md').read(),
-    install_requires=["Django >= 1.4.3",],
+    install_requires=["Django >= 1.5",],
     include_package_data=True,
     zip_safe=False,
 )

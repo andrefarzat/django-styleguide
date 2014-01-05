@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
  
 from django.shortcuts import render
-from styleguide.utils import StyleguideLoader, STYLEGUIDE_DIR_NAME
+from django.core.cache import cache
+from styleguide.utils import StyleguideLoader, STYLEGUIDE_DIR_NAME, STYLEGUIDE_DEBUG
 
 
 def index(request):
-    styleguide_loader = StyleguideLoader()
-    styleguide_components = styleguide_loader.get_styleguide_components()
+    components = None
+    if not STYLEGUIDE_DEBUG:
+        components = cache.get('styleguide_components')
+
+    if components is None:
+        loader = StyleguideLoader()
+        components = loader.get_styleguide_components()
+        cache.set('styleguide_components', components, None)
 
     index_path = "%s/index.html" % STYLEGUIDE_DIR_NAME
-    context = { 'styleguide': styleguide_components }
+    context = { 'styleguide': components }
     return render(request, index_path, context)
 
 
