@@ -5,7 +5,7 @@ import os
 
 from django.core.urlresolvers import reverse
 
-from .utils import StyleguideLoader, STYLEGUIDE_DIR_NAME
+from .utils import StyleguideLoader, Styleguide, STYLEGUIDE_DIR_NAME
 
 
 CURRENT_PATH = os.path.dirname(__file__)
@@ -102,4 +102,32 @@ class StyleguideLoaderTest(unittest.TestCase):
         }
 
         result = self.loader.parse_doc(DOC_STRING_2)
+        self.assertEqual(result, expected_result)
+
+
+class StyleguideTest(unittest.TestCase):
+
+    def setUp(self):
+        self.styleguide = Styleguide()
+
+
+    def test_modules(self):
+        expected_result = ['components', 'layout']
+        result = [m.name for m in self.styleguide.modules]
+        self.assertEqual(result, expected_result)
+
+
+    def test_components(self):
+        expected_result = ['bar', 'layout area', 'footer', 'header']
+        result = [c.name for c in self.styleguide.components]
+        self.assertEqual(result, expected_result)
+
+
+    def test_modules_components(self):
+        expected_result = ['bar', 'layout area']
+        result = [c.name for c in self.styleguide.modules[0].components]
+        self.assertEqual(result, expected_result)
+
+        expected_result = ['footer', 'header']
+        result = [c.name for c in self.styleguide.modules[1].components]
         self.assertEqual(result, expected_result)

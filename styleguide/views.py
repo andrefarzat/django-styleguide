@@ -4,6 +4,12 @@ from django.shortcuts import render
 from django.core.cache import cache
 from styleguide.utils import StyleguideLoader, STYLEGUIDE_DIR_NAME, STYLEGUIDE_DEBUG
 
+def index_neo(request):
+    styleguide = Styleguide()
+    context = { 'styleguide': styleguide }
+    index_path = "%s/index.html" % STYLEGUIDE_DIR_NAME
+    return render(request, index_path, context)
+
 
 def index(request):
     components = None

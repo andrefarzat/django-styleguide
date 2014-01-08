@@ -18,6 +18,83 @@ STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS', ('inc
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
 
+class Styleguide(object):
+    """ Main class which is delivered to template """
+    
+    def __init__(self):
+        self._modules = None
+        self._items = None
+        self._loader = StyleguideLoader()
+
+    @property
+    def modules(self):
+        if self._modules is None:
+            self._modules = []
+            for name, components in self._loader.get_styleguide_components().items():
+                module_id = name.replace(' ', '_')
+                module = {
+                    'id': module_id,
+                    'name': name,
+                    'link': reverse("styleguide.module", args=(module_id, )),
+                    'components': [StyleguideComponent(c) for c in components]
+                }
+                self._modules.append(StyleguideModule(module))
+
+        return self._modules
+
+
+    @property
+    def components(self):
+        ret = []
+        for module in self.modules:
+            ret += module.components
+
+        return ret
+
+    @property
+    def items(self):
+        """ For retro compatibility """
+        return self._loader.get_styleguide_components().items()
+
+
+class StyleguideComponent(dict):
+
+    def __init__(self, data):
+        self._data = data
+
+    def __str__(self):
+        return self._data.__str__()
+
+    def __unicode__(self):
+        return self.__str__()
+
+    def to_dict(self):
+        return self._data
+
+    @property
+    def id(self):
+        return self._data['id']
+
+    @property
+    def name(self):
+        return self._data['name']
+
+    @property
+    def link(self):
+        return self._data['link']
+
+    @property
+    def doc(self):
+        return self._data['doc']
+
+
+class StyleguideModule(StyleguideComponent):
+    
+    @property
+    def components(self):
+        return self._data['components']
+
+
 class StyleguideLoader(object):
 
 
@@ -113,7 +190,7 @@ class StyleguideLoader(object):
                     continue
 
                 doc = self.get_doc_from_file(os.path.join(root, file_name))
-                component_id = file_name.split('.html')[0]
+                component_id = self._format_file_id(file_name)
 
                 component = {
                     'id': component_id,
@@ -127,6 +204,13 @@ class StyleguideLoader(object):
                 components.append(component)
 
         return components
+
+
+    def _format_file_id(self, file_name):
+        """
+        returns a valid string which can be used in html id attribute
+        """
+        return self._format_file_name(file_name).replace(' ', '-')
 
 
     def _format_file_name(self, file_name):

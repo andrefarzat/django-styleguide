@@ -19,4 +19,5 @@ DATABASES = {
 
 INSTALLED_APPS = (
     'styleguide',
+    'styleguide_mock',
 )
