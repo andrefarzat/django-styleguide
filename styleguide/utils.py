@@ -12,6 +12,7 @@ from django.template.defaulttags import CommentNode
 
 
 STYLEGUIDE_DEBUG = getattr(settings, 'STYLEGUIDE_DEBUG', settings.DEBUG)
+STYLEGUIDE_CACHE_NAME = getattr(settings, 'STYLEGUIDE_CACHE_NAME', 'styleguide_components')
 STYLEGUIDE_DIR_NAME = getattr(settings, 'STYLEGUIDE_DIR_NAME', 'styleguide')
 STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS', ('includes', ))
 
