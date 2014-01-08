@@ -109,6 +109,10 @@ class StyleguideComponent(dict):
         return self._data['link']
 
     @property
+    def template(self):
+        return self._data['template']
+
+    @property
     def doc(self):
         return self._data['doc']
 
