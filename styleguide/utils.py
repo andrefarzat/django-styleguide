@@ -24,7 +24,9 @@ class Styleguide(object):
     def __init__(self):
         self._modules = None
         self._items = None
+        self.current_module = None
         self._loader = StyleguideLoader()
+
 
     @property
     def modules(self):
@@ -53,8 +55,33 @@ class Styleguide(object):
 
     @property
     def items(self):
-        """ For retro compatibility """
+        """
+        :deprecated: 
+        For retro compatibility only
+        """
         return self._loader.get_styleguide_components().items()
+
+
+    @property
+    def current_components(self):
+        if self.current_module is None:
+            return []
+        else:
+            return self.current_module.components
+
+
+    def set_current_module(self, module_name):
+        """ Sets the given module as the current one """
+        for module in self.modules:
+            if module.name == module_name:
+                self.current_module = module
+                break
+
+
+    def is_index(self):
+        """ If a module is defined as current, 
+        we say that we are not in an index page """
+        return self.current_module is None
 
 
 class StyleguideComponent(dict):
@@ -64,7 +91,6 @@ class StyleguideComponent(dict):
 
     def __repr__(self):
         return self._data.__str__()
-
 
     def to_dict(self):
         return self._data

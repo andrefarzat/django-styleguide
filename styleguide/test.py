@@ -131,3 +131,27 @@ class StyleguideTest(unittest.TestCase):
         expected_result = ['footer', 'header']
         result = [c.name for c in self.styleguide.modules[1].components]
         self.assertEqual(result, expected_result)
+
+
+    def test_set_current_module(self):
+        # Begins None
+        self.assertEqual(self.styleguide.current_module, None)
+        # Begins an empty list
+        self.assertEqual(self.styleguide.current_components, [])
+        # And we are in the index page
+        self.assertEqual(self.styleguide.is_index(), True)
+
+        expected_result = self.styleguide.modules[0]
+        self.styleguide.set_current_module('layout')
+        self.assertEqual(self.styleguide.current_module, expected_result)
+
+        # current_components
+        expected_result = self.styleguide.modules[0].components
+        self.assertEqual(self.styleguide.current_components, expected_result)
+
+        # Not index page anymore
+        self.assertEqual(self.styleguide.is_index(), False)
+
+
+
+
