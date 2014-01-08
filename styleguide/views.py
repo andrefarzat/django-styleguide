@@ -2,27 +2,19 @@
  
 from django.shortcuts import render
 from django.core.cache import cache
-from styleguide.utils import StyleguideLoader, STYLEGUIDE_DIR_NAME, STYLEGUIDE_DEBUG
-
-def index_neo(request):
-    styleguide = Styleguide()
-    context = { 'styleguide': styleguide }
-    index_path = "%s/index.html" % STYLEGUIDE_DIR_NAME
-    return render(request, index_path, context)
-
+from styleguide.utils import Styleguide, STYLEGUIDE_DIR_NAME, STYLEGUIDE_DEBUG
 
 def index(request):
-    components = None
+    styleguide = None
     if not STYLEGUIDE_DEBUG:
-        components = cache.get('styleguide_components')
+        styleguide = cache.get('styleguide_components')
 
-    if components is None:
-        loader = StyleguideLoader()
-        components = loader.get_styleguide_components()
-        cache.set('styleguide_components', components, None)
+    if styleguide is None:
+        styleguide = Styleguide()
+        cache.set('styleguide_components', styleguide, None)
 
+    context = { 'styleguide': styleguide }
     index_path = "%s/index.html" % STYLEGUIDE_DIR_NAME
-    context = { 'styleguide': components }
     return render(request, index_path, context)
 
 

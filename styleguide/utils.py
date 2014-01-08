@@ -62,11 +62,9 @@ class StyleguideComponent(dict):
     def __init__(self, data):
         self._data = data
 
-    def __str__(self):
+    def __repr__(self):
         return self._data.__str__()
 
-    def __unicode__(self):
-        return self.__str__()
 
     def to_dict(self):
         return self._data
