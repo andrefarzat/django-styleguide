@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='django-styleguide',
-    version='0.1.13',
+    version='0.1.14',
     author=u'André Farzat',
     author_email='andrefarzat@gmail.com',
     packages=find_packages(),
