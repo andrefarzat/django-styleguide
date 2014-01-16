@@ -2,7 +2,11 @@
 
 import os
 import re
-from collections import OrderedDict
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
