@@ -12,7 +12,7 @@ setup(
     license='LICENSE',
     description='Styleguide for django projects',
     long_description=open('README.md').read(),
-    install_requires=["Django >= 1.4",],
+    install_requires=["Django >= 1.4", "ordereddict"],
     include_package_data=True,
     zip_safe=False,
 )
