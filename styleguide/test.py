@@ -105,6 +105,17 @@ class StyleguideLoaderTest(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
 
+    def test__get_docfile_from_folder(self):
+        expected_result = {
+            'description': 'yada yada yada',
+        }
+
+        path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
+        result = self.loader._get_docfile_from_folder(path_to_test, 'layout')
+
+        self.assertEqual(expected_result, result)
+
+
 class StyleguideTest(unittest.TestCase):
 
     def setUp(self):

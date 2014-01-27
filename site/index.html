@@ -166,9 +166,17 @@ box.html #  will be shown as 'box'
             <h2>Configure</h2>
             <p>There are a few configuration variables that you can overwritten.</p>
 {% highlight python %}
+# Debug flag for styleguide ( e.g.: if True, the styleguide generation is not cached )
+STYLEGUIDE_DEBUG = settings.DEBUG
+
 # The name of the styleguide directory in templates folder
 STYLEGUIDE_DIR_NAME = 'styleguide'
 
+# The name used to cache the execution
+STYLEGUIDE_CACHE_NAME = 'styleguide_components'
+
+# A tuple with folder names to be ignored
+STYLEGUIDE_IGNORE_FOLDERS = ('includes', )
 
 {% endhighlight %}
             <!-- h2>Credits</h2 -->

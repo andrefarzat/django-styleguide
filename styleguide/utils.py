@@ -19,15 +19,17 @@ STYLEGUIDE_DEBUG = getattr(settings, 'STYLEGUIDE_DEBUG', settings.DEBUG)
 STYLEGUIDE_CACHE_NAME = getattr(settings, 'STYLEGUIDE_CACHE_NAME', 'styleguide_components')
 STYLEGUIDE_DIR_NAME = getattr(settings, 'STYLEGUIDE_DIR_NAME', 'styleguide')
 STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS', ('includes', ))
+STYLEGUIDE_DOCFILE_NAME = getattr(settings, 'STYLEGUIDE_DOCFILE_NAME', '__doc__.html')
 
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
 
 class Styleguide(object):
-    """ Main class which is delivered to template """
+    """Main class which is delivered to template"""
     
     def __init__(self):
         self._modules = None
+        self._components = None
         self._items = None
         self.current_module = None
         self._loader = StyleguideLoader()
@@ -37,13 +39,13 @@ class Styleguide(object):
     def modules(self):
         if self._modules is None:
             self._modules = []
-            for name, components in self._loader.get_styleguide_components().items():
+            for name, data in self._loader.get_styleguide_components().items():
                 module_id = name.replace(' ', '_')
                 module = {
                     'id': module_id,
                     'name': name,
                     'link': reverse("styleguide.module", args=(module_id, )),
-                    'components': [StyleguideComponent(c) for c in components]
+                    'components': [StyleguideComponent(c) for c in data['components']]
                 }
                 self._modules.append(StyleguideModule(module))
 
@@ -52,11 +54,12 @@ class Styleguide(object):
 
     @property
     def components(self):
-        ret = []
-        for module in self.modules:
-            ret += module.components
+        if self._components is None:
+            self._components = []
+            for module in self.modules:
+                self._components += module.components
 
-        return ret
+        return self._components
 
     @property
     def items(self):
@@ -64,7 +67,11 @@ class Styleguide(object):
         :deprecated: 
         For retro compatibility only
         """
-        return self._loader.get_styleguide_components().items()
+        modules = OrderedDict()
+        for name, data in self._loader.get_styleguide_components().items():
+            modules[name] = data['components']
+
+        return modules
 
 
     @property
@@ -177,15 +184,27 @@ class StyleguideLoader(object):
         Would result in the following dict:
 
         {
-            'layout' : [
-                { 'id': 'header', 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
-                { 'id': 'footer', 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
-            ],
-            'components' : [
-                { 'id': 'bar', 'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
-                { 'id': 'list', 'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
-            ]
-        }
+            'layout': {
+                'id': 'layout',
+                'name': 'layout',
+                'doc': {},
+                'link': 'styleguide/layout/'
+                'components': [
+                    { 'id': 'header', 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
+                    { 'id': 'footer', 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
+                ]
+            },
+            'components': {
+                'id': 'components',
+                'name': 'components',
+                'doc': {},
+                'link': 'styleguide/components/'
+                'components': [
+                    { 'id': 'bar', 'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
+                    { 'id': 'list', 'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
+                ]
+            }
+        ]
         """
 
         ret = OrderedDict()
@@ -199,7 +218,14 @@ class StyleguideLoader(object):
                 for dir_name in dirs:
                     if dir_name in STYLEGUIDE_IGNORE_FOLDERS:
                         continue
-                    ret[dir_name] = self._get_components_from_folder(root, dir_name)
+
+                    ret[dir_name] = {
+                        'id': dir_name,
+                        'name': self._format_file_name(dir_name),
+                        'components': self._get_components_from_folder(root, dir_name),
+                        'link': 'styleguide/layout/',
+                        'doc': self._get_docfile_from_folder(root, dir_name),
+                    }
 
         return ret
 
@@ -218,6 +244,10 @@ class StyleguideLoader(object):
             files.sort()
 
             for file_name in files:
+                if file_name == STYLEGUIDE_DOCFILE_NAME:
+                    # Do not process the doc file
+                    continue
+
                 if not file_name.endswith('.html'):
                     # only template files
                     continue
@@ -239,17 +269,27 @@ class StyleguideLoader(object):
         return components
 
 
+    def _get_docfile_from_folder(self, root, dir_name):
+        """returns a dict with all doc from the given folder"""
+        ret = {}
+        path_to_doc_file = os.path.join(root, dir_name, STYLEGUIDE_DOCFILE_NAME)
+
+        if os.path.isfile(path_to_doc_file):
+            with open(path_to_doc_file) as docfile:
+                content = docfile.read()
+
+            ret = self.parse_doc(content)
+
+        return ret
+
+
     def _format_file_id(self, file_name):
-        """
-        returns a valid string which can be used in html id attribute
-        """
+        """returns a valid string which can be used in html id attribute"""
         return self._format_file_name(file_name).replace(' ', '-')
 
 
     def _format_file_name(self, file_name):
-        """
-        returns the file_name formatted to display
-        """
+        """returns the file_name formatted to display"""
 
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
