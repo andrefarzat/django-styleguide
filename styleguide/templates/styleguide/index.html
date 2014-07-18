@@ -10,16 +10,14 @@
 
     {{ styleguide }}
 
-    {% for module, components in styleguide.items %}
-        <h2>Module: {{ module }}</h2>
+    {% for module in styleguide.modules %}
+        <h2>Module: {{ module.name }}</h2>
 
-        {% for component in components %}
+        {% for component in module.components %}
             <section>
-                {% for key, value in component.items %}
-                    <h3>{{ key }}: {{ value }}</h3>
+                <h3><a href="{{component.link}}">{{ component.name }}</a></h3>
 
-                    {% include component.template %}
-                {% endfor %}
+                {% include component.template %}
             </section>
         {% endfor %}
 

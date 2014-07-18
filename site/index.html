@@ -15,7 +15,7 @@
 
 
     <div id="wrapper">
-        
+
         <div class="spacer spacer--big"></div>
 
         <header id="header" class="container">
@@ -49,14 +49,14 @@
                 <dl>
                     <dt>Simple configuration</dt>
                     <dd>Install it, add the <code>styleguide</code> template folder, it works</dd>
-                    
+
                     <dt>Dynamic generation</dt>
                     <dd>Do not need to execute a django command, while <code>DEBUG = True</code> it generates each time.</dd>
 
                     <dt>Your code. Your way</dt>
                     <dd>100% configurable. You add the css and js necessary. Checkout the configuration section.</dd>
                 </dl>
-                
+
             </p>
 
 
@@ -78,7 +78,7 @@
 
             <p>To install it, you can use pip as follow:</p>
 {% highlight sh %}pip install django-styleguide{% endhighlight %}
-            
+
             <p>Or cloning the github's project direct in your project:</p>
 {% highlight sh %}git clone git@github.com:andrefarzat/django-styleguide.git styleguide{% endhighlight %}
 
@@ -100,9 +100,9 @@ urlpatterns = patterns('',
 
             <p>Once you start the server, you can navegate to /styleguide/ and see the initial page.</p>
 
-            
+
             <h2>Getting started</h2>
-            
+
             <p>
                 Create a <code>styleguide</code> folder in the <code>templates</code> folder in your django project. <br />
                 Then, create a folder named <code>basic</code> and add a file name <code>box.html</code>.<br />
@@ -121,10 +121,10 @@ urlpatterns = patterns('',
             </p>
 
 {% highlight django %}{% raw %}
-{% for module, components in styleguide.items %}
-    <h2>Module: {{ module }}</h2>
+{% for module in styleguide.modules %}
+    <h2>Module: {{ module.name }}</h2>
 
-    {% for component in components %}
+    {% for component in module.components %}
         <section>
             <h3><a href="{{component.link}}">{{ component.name }}</a></h3>
 
@@ -138,7 +138,7 @@ urlpatterns = patterns('',
             <p>
                 You can check the <a href="//github.com/andrefarzat/django-styleguide/blob/master/styleguide/templates/styleguide/index.html" rel="external">default index.html file</a> to see a more complete example.
             </p>
-    
+
             <h2>Understanding the folder structure (modules and files)</h2>
 
             <p>
@@ -185,11 +185,11 @@ STYLEGUIDE_IGNORE_FOLDERS = ('includes', )
 
 
         <footer id="footer">
-            <p>&nbsp;</p>    
+            <p>&nbsp;</p>
         </footer>
-        
+
     </div>
 
-    
+
 </body>
 </html>
