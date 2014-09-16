@@ -26,7 +26,7 @@ FILE_NAME_RE = re.compile('^\d{2}\-')
 
 class Styleguide(object):
     """Main class which is delivered to template"""
-    
+
     def __init__(self):
         self._modules = None
         self._components = None
@@ -64,7 +64,7 @@ class Styleguide(object):
     @property
     def items(self):
         """
-        :deprecated: 
+        :deprecated:
         For retro compatibility only
         """
         modules = OrderedDict()
@@ -91,7 +91,7 @@ class Styleguide(object):
 
 
     def is_index(self):
-        """ If a module is defined as current, 
+        """ If a module is defined as current,
         we say that we are not in an index page """
         return self.current_module is None
 
@@ -129,7 +129,7 @@ class StyleguideComponent(dict):
 
 
 class StyleguideModule(StyleguideComponent):
-    
+
     @property
     def components(self):
         return self._data['components']
