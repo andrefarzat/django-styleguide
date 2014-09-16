@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+import os
+
 
 SECRET_KEY = 'psst'
 SITE_ID = 1
 
 ROOT_URLCONF = 'styleguide.urls'
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
@@ -20,4 +24,9 @@ DATABASES = {
 INSTALLED_APPS = (
     'styleguide',
     'styleguide_mock',
+)
+
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'styleguide_mock', 'other_templates'),
 )
