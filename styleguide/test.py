@@ -40,7 +40,6 @@ class StyleguideLoaderTest(unittest.TestCase):
     def setUp(self):
         self.loader = StyleguideLoader()
 
-
     def test_format_name(self):
 
         # [ (given_file_name, expected_result), ... ]
@@ -58,32 +57,34 @@ class StyleguideLoaderTest(unittest.TestCase):
             ('____A', "    A"),
         ]
 
-
         for file_name, expected_result in file_name_list_to_be_tested:
             formatted_file_name = self.loader._format_file_name(file_name)
             self.assertEqual(formatted_file_name, expected_result)
 
-
     def test__get_components_from_folder(self):
         expected_result = [
-            { 'id': u'footer', 'file_name': u'footer.html', 'name': u'footer', 'template': u'styleguide/layout/footer.html', 'doc': {}, 'link': STYLEGUIDE_URL+'layout#footer' },
-            { 'id': u'header', 'file_name': u'header.html', 'name': u'header', 'template': u'styleguide/layout/header.html', 'doc': {}, 'link': STYLEGUIDE_URL+'layout#header' }
+            {'id': u'footer', 'file_name': u'footer.html', 'name': u'footer',
+             'template': u'styleguide/layout/footer.html', 'doc': {},
+             'link': STYLEGUIDE_URL+'layout#footer'},
+            {'id': u'header', 'file_name': u'header.html', 'name': u'header',
+             'template': u'styleguide/layout/header.html', 'doc': {},
+             'link': STYLEGUIDE_URL+'layout#header'}
         ]
 
         path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
-        result = self.loader._get_components_from_folder(path_to_test, 'layout')
+        result = self.loader._get_components_from_folder(path_to_test,
+                                                         'layout')
 
         self.assertEqual(result, expected_result)
-
 
     def test_extract_doc_from_file(self):
         expected_result = DOC_STRING
 
-        path_to_file = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME, 'components', '02-area.html')
+        path_to_file = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME,
+                                    'components', '02-area.html')
         result = self.loader.extract_doc_from_file(path_to_file)
 
         self.assertEqual(result, expected_result)
-
 
     def test_parse_doc(self):
         expected_result = {
@@ -98,12 +99,12 @@ class StyleguideLoaderTest(unittest.TestCase):
             "name": "something different",
             "oneline": "does this work ?",
             "twolines": "if I put this in\ntwolines, would this work ?",
-            "threelines": "Now I am getting too deep ?\nI am going to write three lines !\nOMG! I did wrote three lines !!!"
+            "threelines": ("Now I am getting too deep ?\nI am going to write "
+                           "three lines !\nOMG! I did wrote three lines !!!")
         }
 
         result = self.loader.parse_doc(DOC_STRING_2)
         self.assertEqual(result, expected_result)
-
 
     def test__get_docfile_from_folder(self):
         expected_result = {
@@ -121,18 +122,15 @@ class StyleguideTest(unittest.TestCase):
     def setUp(self):
         self.styleguide = Styleguide()
 
-
     def test_modules(self):
         expected_result = ['components', 'layout']
         result = [m.name for m in self.styleguide.modules]
         self.assertEqual(result, expected_result)
 
-
     def test_components(self):
         expected_result = ['bar', 'layout area', 'footer', 'header']
         result = [c.name for c in self.styleguide.components]
         self.assertEqual(result, expected_result)
-
 
     def test_modules_components(self):
         expected_result = ['bar', 'layout area']
@@ -142,7 +140,6 @@ class StyleguideTest(unittest.TestCase):
         expected_result = ['footer', 'header']
         result = [c.name for c in self.styleguide.modules[1].components]
         self.assertEqual(result, expected_result)
-
 
     def test_set_current_module(self):
         # Begins None
@@ -162,7 +159,3 @@ class StyleguideTest(unittest.TestCase):
 
         # Not index page anymore
         self.assertEqual(self.styleguide.is_index(), False)
-
-
-
-
