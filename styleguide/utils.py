@@ -43,11 +43,12 @@ class Styleguide(object):
             self._modules = []
             for name, data in self._loader.get_styleguide_components().items():
                 module_id = name.replace(' ', '_')
+                comps = [StyleguideComponent(c) for c in data['components']]
                 module = {
                     'id': module_id,
                     'name': name,
                     'link': reverse("styleguide.module", args=(module_id, )),
-                    'components': [StyleguideComponent(c) for c in data['components']]
+                    'components': comps
                 }
                 self._modules.append(StyleguideModule(module))
 
@@ -141,14 +142,19 @@ class StyleguideLoader(object):
         -> tuple(string, string, ..)
         """
 
-        # Based on: https://github.com/django/django/blob/master/django/template/loaders/app_directories.py
+        # Based on: ("https://github.com/django/django/blob/master/django"
+        #            "/template/loaders/app_directories.py")
         styleguide_template_dirs = []
+        template_dirs = getattr(settings, 'TEMPLATE_DIRS', ())
 
         try:
-            from django.template.loaders.app_directories import app_template_dirs
+            from django.template.loaders.app_directories import \
+                app_template_dirs
         except ImproperlyConfigured:
             # Running outside django's environmement
-            app_template_dirs = []
+            app_template_dirs = ()
+
+        app_template_dirs += tuple(template_dirs)
 
         for app_template_dir in app_template_dirs:
             template_dir = os.path.join(app_template_dir, STYLEGUIDE_DIR_NAME)
@@ -163,8 +169,8 @@ class StyleguideLoader(object):
         Search for all templates files in `STYLEGUIDE_DIR_NAME` app_directories
         in all installed apps in the django project
 
-        returns a dict with the folder name as the key and a list with all template
-        files in that folder.
+        returns a dict with the folder name as the key and a list with all
+        template files in that folder.
 
         for example, givin the following folder structure:
 
@@ -186,8 +192,8 @@ class StyleguideLoader(object):
                 'doc': {},
                 'link': 'styleguide/layout/'
                 'components': [
-                    { 'id': 'header', 'name': 'header', 'file_name': 'header.html', 'template' : 'styleguide/layout/header.html', ... },
-                    { 'id': 'footer', 'name': 'footer', 'file_name': 'footer.html', 'template' : 'styleguide/layout/footer.html', ... },
+                    { 'id': 'header', 'name': 'header', 'file_name': ... },
+                    { 'id': 'footer', 'name': 'footer', 'file_name': ... },
                 ]
             },
             'components': {
@@ -196,8 +202,8 @@ class StyleguideLoader(object):
                 'doc': {},
                 'link': 'styleguide/components/'
                 'components': [
-                    { 'id': 'bar', 'name': 'bar', 'file_name': 'bar.html', 'template' : 'styleguide/components/bar.html', ... },
-                    { 'id': 'list', 'name': 'list', 'file_name': 'list.html', 'template' : 'styleguide/components/list.html', ... },
+                    { 'id': 'bar', 'name': 'bar', 'file_name': ... },
+                    { 'id': 'list', 'name': 'list', 'file_name': ... },
                 ]
             }
         ]
@@ -215,10 +221,13 @@ class StyleguideLoader(object):
                     if dir_name in STYLEGUIDE_IGNORE_FOLDERS:
                         continue
 
+                    components = self._get_components_from_folder(root,
+                                                                  dir_name)
+
                     ret[dir_name] = {
                         'id': dir_name,
                         'name': self._format_file_name(dir_name),
-                        'components': self._get_components_from_folder(root, dir_name),
+                        'components': components,
                         'link': 'styleguide/layout/',
                         'doc': self._get_docfile_from_folder(root, dir_name),
                     }
@@ -249,14 +258,18 @@ class StyleguideLoader(object):
 
                 doc = self.get_doc_from_file(os.path.join(root, file_name))
                 component_id = self._format_file_id(file_name)
+                template_path = os.path.join(STYLEGUIDE_DIR_NAME, dir_name,
+                                             file_name)
+                url = reverse("styleguide.component", args=(dir_name,
+                                                            component_id,))
 
                 component = {
                     'id': component_id,
                     'name': self._format_file_name(doc.get('name', file_name)),
                     'file_name': file_name,
-                    'template': os.path.join(STYLEGUIDE_DIR_NAME, dir_name, file_name),
+                    'template': template_path,
                     'doc': doc,
-                    'link': reverse("styleguide.component", args=(dir_name, component_id,))
+                    'link': url
                 }
 
                 components.append(component)
@@ -266,7 +279,8 @@ class StyleguideLoader(object):
     def _get_docfile_from_folder(self, root, dir_name):
         """returns a dict with all doc from the given folder"""
         ret = {}
-        path_to_doc_file = os.path.join(root, dir_name, STYLEGUIDE_DOCFILE_NAME)
+        path_to_doc_file = os.path.join(root, dir_name,
+                                        STYLEGUIDE_DOCFILE_NAME)
 
         if os.path.isfile(path_to_doc_file):
             with open(path_to_doc_file) as docfile:

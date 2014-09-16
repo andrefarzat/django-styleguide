@@ -7,7 +7,7 @@ SITE_ID = 1
 
 ROOT_URLCONF = 'styleguide.urls'
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {

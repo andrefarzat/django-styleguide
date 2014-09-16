@@ -11,6 +11,8 @@ from .utils import StyleguideLoader, Styleguide, STYLEGUIDE_DIR_NAME
 CURRENT_PATH = os.path.dirname(__file__)
 PROJECT_ROOT = os.path.join(CURRENT_PATH, '..')
 MOCK_PROJECT_PATH = os.path.join(PROJECT_ROOT, 'styleguide_mock', 'templates')
+OTHER_TEMPLATE_PATH = os.path.join(PROJECT_ROOT, 'styleguide_mock',
+                                   'other_templates')
 STYLEGUIDE_URL = reverse("styleguide.index")
 
 DOC_STRING = """@doc
@@ -71,7 +73,7 @@ class StyleguideLoaderTest(unittest.TestCase):
              'link': STYLEGUIDE_URL+'layout#header'}
         ]
 
-        path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
+        path_to_test = os.path.join(OTHER_TEMPLATE_PATH, STYLEGUIDE_DIR_NAME)
         result = self.loader._get_components_from_folder(path_to_test,
                                                          'layout')
 
@@ -111,7 +113,7 @@ class StyleguideLoaderTest(unittest.TestCase):
             'description': 'yada yada yada',
         }
 
-        path_to_test = os.path.join(MOCK_PROJECT_PATH, STYLEGUIDE_DIR_NAME)
+        path_to_test = os.path.join(OTHER_TEMPLATE_PATH, STYLEGUIDE_DIR_NAME)
         result = self.loader._get_docfile_from_folder(path_to_test, 'layout')
 
         self.assertEqual(expected_result, result)
