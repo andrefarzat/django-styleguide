@@ -16,10 +16,13 @@ from django.template.defaulttags import CommentNode
 
 
 STYLEGUIDE_DEBUG = getattr(settings, 'STYLEGUIDE_DEBUG', settings.DEBUG)
-STYLEGUIDE_CACHE_NAME = getattr(settings, 'STYLEGUIDE_CACHE_NAME', 'styleguide_components')
+STYLEGUIDE_CACHE_NAME = getattr(settings, 'STYLEGUIDE_CACHE_NAME',
+                                'styleguide_components')
 STYLEGUIDE_DIR_NAME = getattr(settings, 'STYLEGUIDE_DIR_NAME', 'styleguide')
-STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS', ('includes', ))
-STYLEGUIDE_DOCFILE_NAME = getattr(settings, 'STYLEGUIDE_DOCFILE_NAME', '__doc__.html')
+STYLEGUIDE_IGNORE_FOLDERS = getattr(settings, 'STYLEGUIDE_IGNORE_FOLDERS',
+                                    ('includes', ))
+STYLEGUIDE_DOCFILE_NAME = getattr(settings, 'STYLEGUIDE_DOCFILE_NAME',
+                                  '__doc__.html')
 
 FILE_NAME_RE = re.compile('^\d{2}\-')
 
@@ -33,7 +36,6 @@ class Styleguide(object):
         self._items = None
         self.current_module = None
         self._loader = StyleguideLoader()
-
 
     @property
     def modules(self):
@@ -50,7 +52,6 @@ class Styleguide(object):
                 self._modules.append(StyleguideModule(module))
 
         return self._modules
-
 
     @property
     def components(self):
@@ -73,7 +74,6 @@ class Styleguide(object):
 
         return modules
 
-
     @property
     def current_components(self):
         if self.current_module is None:
@@ -81,14 +81,12 @@ class Styleguide(object):
         else:
             return self.current_module.components
 
-
     def set_current_module(self, module_name):
         """ Sets the given module as the current one """
         for module in self.modules:
             if module.name == module_name:
                 self.current_module = module
                 break
-
 
     def is_index(self):
         """ If a module is defined as current,
@@ -137,7 +135,6 @@ class StyleguideModule(StyleguideComponent):
 
 class StyleguideLoader(object):
 
-
     def _get_template_dirs(self):
         """
         Returns all template folder from all installed apps
@@ -160,7 +157,6 @@ class StyleguideLoader(object):
                 styleguide_template_dirs.append(template_dir)
 
         return tuple(styleguide_template_dirs)
-
 
     def get_styleguide_components(self):
         """
@@ -229,7 +225,6 @@ class StyleguideLoader(object):
 
         return ret
 
-
     def _get_components_from_folder(self, root, dir_name):
         """
         :root: The whole path to the folder
@@ -268,7 +263,6 @@ class StyleguideLoader(object):
 
         return components
 
-
     def _get_docfile_from_folder(self, root, dir_name):
         """returns a dict with all doc from the given folder"""
         ret = {}
@@ -282,11 +276,9 @@ class StyleguideLoader(object):
 
         return ret
 
-
     def _format_file_id(self, file_name):
         """returns a valid string which can be used in html id attribute"""
         return self._format_file_name(file_name).replace(' ', '-')
-
 
     def _format_file_name(self, file_name):
         """returns the file_name formatted to display"""
@@ -294,7 +286,6 @@ class StyleguideLoader(object):
         # if the file_name startswith two digits, remove them
         file_name = FILE_NAME_RE.split(file_name)[-1]
         return file_name.split('.html')[0].replace('_', ' ')
-
 
     def get_doc_from_file(self, file_path):
         """
@@ -304,7 +295,6 @@ class StyleguideLoader(object):
 
         doc_string = self.extract_doc_from_file(file_path)
         return self.parse_doc(doc_string)
-
 
     def extract_doc_from_file(self, file_path):
         """ -> string """
@@ -325,7 +315,6 @@ class StyleguideLoader(object):
             index += 1
 
         return result
-
 
     def parse_doc(self, doc):
         """
