@@ -14,7 +14,8 @@ from django.core.urlresolvers import reverse
 from django.template import Lexer, Parser
 from django.template.defaulttags import CommentNode
 
-
+STYLEGUIDE_ACCESS = getattr(settings, 'STYLEGUIDE_ACCESS',
+                            lambda user: user.is_staff or user.is_superuser)
 STYLEGUIDE_DEBUG = getattr(settings, 'STYLEGUIDE_DEBUG', settings.DEBUG)
 STYLEGUIDE_CACHE_NAME = getattr(settings, 'STYLEGUIDE_CACHE_NAME',
                                 'styleguide_components')

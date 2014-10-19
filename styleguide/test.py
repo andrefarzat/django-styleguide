@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import unittest
 import os
 
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 
 from .utils import StyleguideLoader, Styleguide, STYLEGUIDE_DIR_NAME
+from .factories import UserFactory, USER_PASSWORD
 
 
 CURRENT_PATH = os.path.dirname(__file__)
@@ -37,7 +38,7 @@ twolines, would this work ?
 """.strip()
 
 
-class StyleguideLoaderTest(unittest.TestCase):
+class StyleguideLoaderTest(TestCase):
 
     def setUp(self):
         self.loader = StyleguideLoader()
@@ -119,7 +120,7 @@ class StyleguideLoaderTest(unittest.TestCase):
         self.assertEqual(expected_result, result)
 
 
-class StyleguideTest(unittest.TestCase):
+class StyleguideTest(TestCase):
 
     def setUp(self):
         self.styleguide = Styleguide()
@@ -161,3 +162,21 @@ class StyleguideTest(unittest.TestCase):
 
         # Not index page anymore
         self.assertEqual(self.styleguide.is_index(), False)
+
+
+class TestIndexView(TestCase):
+
+    def test_access(self):
+        users = [UserFactory(is_staff=True), UserFactory(is_superuser=True)]
+        url = reverse('styleguide.index')
+
+        for user in users:
+            self.client.login(username=user.username, password=USER_PASSWORD)
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 200)
+
+        self.client.logout()
+
+        user = UserFactory()
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)

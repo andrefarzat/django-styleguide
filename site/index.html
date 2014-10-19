@@ -178,6 +178,9 @@ STYLEGUIDE_CACHE_NAME = 'styleguide_components'
 # A tuple with folder names to be ignored
 STYLEGUIDE_IGNORE_FOLDERS = ('includes', )
 
+# A small function to validate the access to the user
+STYLEGUIDE_ACCESS = lambda user: user.is_staff or user.is_superuser
+
 {% endhighlight %}
             <!-- h2>Credits</h2 -->
 
