@@ -1,3 +1,2 @@
 django >= 1.4
 ordereddict >= 1.1
-factory-boy==2.4.1
