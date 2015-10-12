@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-
+DEBUG = True
 SECRET_KEY = 'psst'
 SITE_ID = 1
 

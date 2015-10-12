@@ -13,4 +13,6 @@ styleguide for django
 Executing the tests
 -------------------
 
-`python manage.py test`
+1. `pip install -r requirements-dev.txt`
+1. `python manage.py test`
+1. Drink a coke

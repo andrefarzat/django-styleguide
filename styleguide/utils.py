@@ -11,8 +11,13 @@ except ImportError:
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.urlresolvers import reverse
-from django.template import Lexer, Parser
 from django.template.defaulttags import CommentNode
+
+try:
+    from django.template import Lexer, Parser
+except ImportError:
+    from django.template.base import Lexer, Parser
+
 
 STYLEGUIDE_ACCESS = getattr(settings, 'STYLEGUIDE_ACCESS',
                             lambda user: user.is_staff or user.is_superuser)
@@ -137,6 +142,27 @@ class StyleguideModule(StyleguideComponent):
 
 class StyleguideLoader(object):
 
+    def _get_app_template_dirs(self):
+        """
+        Helper to get the `app_template_dirs` in different django versions
+        -> tuple(string, string, ...)
+        """
+        try:
+            # django 1.8
+            from django.template.utils import get_app_template_dirs
+            return get_app_template_dirs("templates")
+        except ImportError:
+            # django <= 1.7
+            pass
+
+        try:
+            from django.template.loaders.app_directories import \
+                app_template_dirs
+            return app_template_dirs
+        except ImproperlyConfigured:
+            # Running outside django's environmement
+            return ()
+
     def _get_template_dirs(self):
         """
         Returns all template folder from all installed apps
@@ -148,13 +174,7 @@ class StyleguideLoader(object):
         styleguide_template_dirs = []
         template_dirs = getattr(settings, 'TEMPLATE_DIRS', ())
 
-        try:
-            from django.template.loaders.app_directories import \
-                app_template_dirs
-        except ImproperlyConfigured:
-            # Running outside django's environmement
-            app_template_dirs = ()
-
+        app_template_dirs = self._get_app_template_dirs()
         app_template_dirs += tuple(template_dirs)
 
         for app_template_dir in app_template_dirs:
