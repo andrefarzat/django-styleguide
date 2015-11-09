@@ -13,3 +13,4 @@ site/_site
 site/css/style.css
 htmlcov/
 .coverage
+.idea
