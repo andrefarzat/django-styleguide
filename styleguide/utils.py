@@ -15,8 +15,10 @@ from django.template.defaulttags import CommentNode
 
 try:
     from django.template import Lexer, Parser
+    Engine = None
 except ImportError:
     from django.template.base import Lexer, Parser
+    from django.template.engine import Engine
 
 
 STYLEGUIDE_ACCESS = getattr(settings, 'STYLEGUIDE_ACCESS',
@@ -283,6 +285,7 @@ class StyleguideLoader(object):
                                              file_name)
                 url = reverse("styleguide.component", args=(dir_name,
                                                             component_id,))
+                url = url.replace('%23', '#')  # @see: http://stackoverflow.com/questions/11165267/django-redirect-with-anchor-parameters#comment57154035_22109798
 
                 component = {
                     'id': component_id,
@@ -335,9 +338,13 @@ class StyleguideLoader(object):
         """ -> string """
 
         file_contents = open(file_path).read()
-        lexer = Lexer(file_contents, None)
+        lexer = Lexer(file_contents)
         tokens = lexer.tokenize()
-        parser = Parser(lexer.tokenize())
+        if Engine is not None:
+            engine = Engine.get_default()
+            parser = Parser(lexer.tokenize(), engine.template_libraries, engine.template_builtins, origin=None)
+        else:
+            parser = Parser(lexer.tokenize())
 
         index = 0
         result = ""
