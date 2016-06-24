@@ -1,3 +1,0 @@
-pygments: true
-include: ['humans.txt']
-exclude: ['README.md', 'css/style.scss']
