@@ -1,2 +1,0 @@
-django >= 1.4
-ordereddict >= 1.1

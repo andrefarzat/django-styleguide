@@ -1,1 +1,0 @@
-I am a mock django module just to help the test from the styleguide =)
