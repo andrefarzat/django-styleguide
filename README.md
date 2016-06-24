@@ -3,7 +3,7 @@ django-styleguide
 
 styleguide for django
 
-[http://www.andrefarzat.com/django-styleguide](http://www.andrefarzat.com/django-styleguide)
+http://andrefarzat.github.io/django-styleguide/
 
 
 branch     | Build Status | Coverage Status | Requirements Status
